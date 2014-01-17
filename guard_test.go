@@ -21,3 +21,11 @@ func TestMayFetch(t *testing.T) {
 	}
 }
 
+func TestNext(t *testing.T) {
+	g := guard{limit: 5, latest: time.Now().UTC().Add(-1 * time.Minute)}
+	expected := 4
+	actual := g.next()
+	if expected != actual {
+		t.Errorf("Expected to wait 4 more minutes, but must wait %d more minutes.", actual)
+	}
+}
