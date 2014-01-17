@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -31,5 +32,24 @@ func TestUpdateLatest(t *testing.T) {
 	t2 := configLatest(file)
 	if t1 != t2 {
 		t.Errorf("Expected: %v, got: %v")
+	}
+}
+
+func TestLogLatest(t *testing.T) {
+	file := "./.testLogLatest"
+	t1 := time.Date(2014, 1, 2, 3, 45, 0, 0, time.UTC)
+	t2 := time.Date(2014, 2, 3, 4, 56, 0, 0, time.UTC)
+	logLatest(file, t1)
+	logLatest(file, t2)
+	defer os.Remove(file)
+
+	actual, err := ioutil.ReadFile(file)
+	if err != nil {
+		t.Errorf("Unable to read %s", file)
+	}
+
+	expected := "2014-01-02 03:45:00 +0000 UTC\n2014-02-03 04:56:00 +0000 UTC\n"
+	if expected != string(actual) {
+		t.Errorf("Expected: %s\n Got: %s\n", expected, actual)
 	}
 }

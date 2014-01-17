@@ -27,6 +27,10 @@ func latestFile() (name string) {
 	return fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), ".happimap", "latest")
 }
 
+func logFile() (name string) {
+	return fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), ".happimap", "log")
+}
+
 func configLimit(file string) (minutes int) {
 	value, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -56,4 +60,15 @@ func configLatest(file string) time.Time {
 
 func updateLatest(file string, timestamp time.Time) {
 	ioutil.WriteFile(file, []byte(timestamp.Format(longFormat)), 0644)
+}
+
+func logLatest(file string, timestamp time.Time) {
+	f, err := os.OpenFile(file, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	_, err = f.Write([]byte(timestamp.Format(longFormat)))
+	_, err = f.Write([]byte("\n"))
+	return
 }

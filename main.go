@@ -16,7 +16,9 @@ func main() {
 		if g.mayFetch() {
 			fmt.Printf("Checking email.\nLast checked %d minutes ago.\n", g.minutesAgo())
 			accounts := fetchEmail()
-			updateLatest(latestFile(), time.Now().UTC())
+			now := time.Now().UTC()
+			updateLatest(latestFile(), now)
+			logLatest(logFile(), now)
 
 			if len(accounts) == 0 {
 				fmt.Println("No new emails.")
