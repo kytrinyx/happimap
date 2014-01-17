@@ -27,7 +27,12 @@ func main() {
 			}
 
 		} else {
-			fmt.Printf("Wait another %d minutes.\n", g.next())
+			min := "minutes"
+			if g.next() == 1 {
+				min = "minute"
+			}
+
+			fmt.Printf("Wait another %d %s.\n", g.next(), min)
 		}
 	}
 
