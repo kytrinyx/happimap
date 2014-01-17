@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 	"time"
 )
@@ -22,5 +23,13 @@ func TestConfigLatest(t *testing.T) {
 }
 
 func TestUpdateLatest(t *testing.T) {
-	updateLatest("./.testUpdateLatest", time.Now().UTC())
+	file := "./.testUpdateLatest"
+	t1 := time.Date(2014, 1, 2, 3, 45, 0, 0, time.UTC)
+	updateLatest(file, t1)
+	defer os.Remove(file)
+
+	t2 := configLatest(file)
+	if t1 != t2 {
+		t.Errorf("Expected: %v, got: %v")
+	}
 }
