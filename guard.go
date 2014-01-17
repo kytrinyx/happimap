@@ -8,7 +8,7 @@ type guard struct {
 }
 
 func (g guard) mayFetch() (ok bool) {
-	return g.minutesAgo() > g.limit
+	return g.minutesAgo() >= g.limit
 }
 
 func (g guard) minutesAgo() int {
