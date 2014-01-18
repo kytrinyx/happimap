@@ -62,18 +62,25 @@ func updateLatest(file string, timestamp time.Time) {
 	ioutil.WriteFile(file, []byte(timestamp.Format(longFormat)), 0644)
 }
 
-func logLatest(file string, timestamp time.Time, allowed bool) {
+func logLatest(file string, timestamp time.Time, status string) {
 	f, err := os.OpenFile(file, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		return
 	}
 	ts := timestamp.Format(longFormat)
-	status := "OK"
-	if !allowed {
-		status = "WAIT"
-	}
 	s := fmt.Sprintf("%s\t%s\n", ts, status)
 	defer f.Close()
 	_, err = f.Write([]byte(s))
 	return
+}
+
+func status(allowed, forced bool) string {
+	switch {
+	default:
+		return "WAIT"
+	case allowed:
+		return "OK"
+	case forced:
+		return "FORCE"
+	}
 }

@@ -39,8 +39,8 @@ func TestLogLatest(t *testing.T) {
 	file := "./.testLogLatest"
 	t1 := time.Date(2014, 1, 2, 3, 45, 0, 0, time.UTC)
 	t2 := time.Date(2014, 2, 3, 4, 56, 0, 0, time.UTC)
-	logLatest(file, t1, true)
-	logLatest(file, t2, false)
+	logLatest(file, t1, "NOTE1")
+	logLatest(file, t2, "NOTE2")
 	defer os.Remove(file)
 
 	actual, err := ioutil.ReadFile(file)
@@ -48,7 +48,7 @@ func TestLogLatest(t *testing.T) {
 		t.Errorf("Unable to read %s", file)
 	}
 
-	expected := "2014-01-02 03:45:00 +0000 UTC\tOK\n2014-02-03 04:56:00 +0000 UTC\tWAIT\n"
+	expected := "2014-01-02 03:45:00 +0000 UTC\tNOTE1\n2014-02-03 04:56:00 +0000 UTC\tNOTE2\n"
 	if expected != string(actual) {
 		t.Errorf("Expected: %s\n Got: %s\n", expected, actual)
 	}

@@ -11,13 +11,17 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "happimap"
 	app.Usage = "Control the email reflex"
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{"force, f", "Override wait injunction"},
+	}
 	app.Action = func(c *cli.Context) {
 		g := latestGuard()
 
 		now := time.Now().UTC()
-		logLatest(logFile(), now, g.mayFetch())
+		status := status(g.mayFetch(), c.Bool("force"))
+		logLatest(logFile(), now, status)
 
-		if g.mayFetch() {
+		if g.mayFetch() || c.Bool("force") {
 			fmt.Printf("Checking email.\nLast checked %d minutes ago.\n", g.minutesAgo())
 			accounts := fetchEmail()
 			updateLatest(latestFile(), now)
